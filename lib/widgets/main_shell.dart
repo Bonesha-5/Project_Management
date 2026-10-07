@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/teamMembers.dart';
+import '../screens/team_members.dart';
 
 class MainShell extends StatefulWidget {
   final bool isDark;
