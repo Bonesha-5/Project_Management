@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/sla_service.dart';
 
+// Palette colours from the design brief.
 const Color _teal = Color(0xFF14B8A6);
 const Color _amber = Color(0xFFF59E0B);
 const Color _red = Color(0xFFEF4444);
@@ -12,7 +13,7 @@ class StatusPill extends StatelessWidget {
 
   const StatusPill({super.key, required this.status});
 
-  /// The main colour for a status
+  /// The main colour for a status (use it for bars, dots and charts).
   static Color colorFor(SlaStatus status) {
     switch (status) {
       case SlaStatus.onTrack:
@@ -79,6 +80,9 @@ class WorkloadBadge extends StatelessWidget {
   }
 }
 
+/// The shared pill shape: a soft tinted background with coloured text.
+/// Text is darker in light mode and lighter in dark mode so it stays
+/// readable on both backgrounds.
 class _Pill extends StatelessWidget {
   final String label;
   final Color color;

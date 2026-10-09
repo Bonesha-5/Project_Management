@@ -6,8 +6,8 @@ import '../services/sla_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/status_pill.dart';
 import '../widgets/user_avatar.dart';
-
-// import 'add_member_screen.dart'; // Thursday
+import 'add_member_screen.dart';
+import 'member_tasks_screen.dart';
 
 class TeamScreen extends StatefulWidget {
   const TeamScreen({super.key});
@@ -28,6 +28,7 @@ class _TeamScreenState extends State<TeamScreen> {
     _loadData();
   }
 
+  /// Loads members and tasks, then redraws the screen with setState.
   Future<void> _loadData() async {
     try {
       final members = await StorageService.getMembers();
@@ -50,12 +51,20 @@ class _TeamScreenState extends State<TeamScreen> {
 
   /// Opens Add Member and reloads when the user comes back.
   Future<void> _openAddMember() async {
-    // await Navigator.push(context,
-    //     MaterialPageRoute(builder: (_) => const AddMemberScreen()));
-    // await _loadData();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Add Member arrives on Thursday.')),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddMemberScreen()),
     );
+    await _loadData();
+  }
+
+  /// Opens one member's tasks and reloads when the user comes back.
+  Future<void> _openMember(Member member) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => MemberTasksScreen(member: member)),
+    );
+    await _loadData();
   }
 
   @override
@@ -121,7 +130,8 @@ class _TeamScreenState extends State<TeamScreen> {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: cardColor,
               borderRadius: BorderRadius.circular(20),
@@ -133,6 +143,7 @@ class _TeamScreenState extends State<TeamScreen> {
                     member: member,
                     openTasks: SlaService.openTaskCount(member.id, _tasks),
                     workload: SlaService.workloadFor(member.id, _tasks),
+                    onTap: () => _openMember(member),
                   ),
               ],
             ),
@@ -142,7 +153,7 @@ class _TeamScreenState extends State<TeamScreen> {
     );
   }
 
-  /// Empty and error states
+  /// Empty and error states. Scrollable so pull-to-refresh still works.
   Widget _scrollableMessage({
     required IconData icon,
     required String title,
@@ -184,15 +195,18 @@ class _TeamScreenState extends State<TeamScreen> {
 }
 
 /// One member: avatar, name, "title · N open" and the workload badge.
+/// The whole row can be tapped to see the member's tasks.
 class _MemberRow extends StatelessWidget {
   final Member member;
   final int openTasks;
   final Workload workload;
+  final VoidCallback onTap;
 
   const _MemberRow({
     required this.member,
     required this.openTasks,
     required this.workload,
+    required this.onTap,
   });
 
   @override
@@ -200,38 +214,46 @@ class _MemberRow extends StatelessWidget {
     final muted = Theme.of(context).colorScheme.onSurface.withAlpha(150);
     final title = member.title.trim().isEmpty ? 'Team member' : member.title;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 9),
-      child: Row(
-        children: [
-          UserAvatar(name: member.name, color: Color(member.avatarColor)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  member.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          child: Row(
+            children: [
+              UserAvatar(name: member.name, color: Color(member.avatarColor)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      member.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '$title · $openTasks open',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: muted, fontSize: 12),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  '$title · $openTasks open',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: muted, fontSize: 12),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 8),
+              WorkloadBadge(workload: workload),
+              const SizedBox(width: 4),
+              Icon(Icons.chevron_right_rounded, size: 20, color: muted),
+            ],
           ),
-          const SizedBox(width: 8),
-          WorkloadBadge(workload: workload),
-        ],
+        ),
       ),
     );
   }

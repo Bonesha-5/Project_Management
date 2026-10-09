@@ -8,17 +8,26 @@ import '../models/task.dart';
 import 'seed_data.dart';
 
 class StorageService {
-  StorageService._();
+  StorageService._(); // Only static methods, so nobody creates an instance.
 
-  // Saved keys
+  // Saved keys (agreed in the shared contract).
   static const String keyTasks = 'tasks';
   static const String keyMembers = 'members';
   static const String keyCurrentUserId = 'currentUserId';
   static const String keyDarkMode = 'darkMode';
   static const String keySeeded = 'seeded';
 
+  // Remembers the running seed job so two screens loading at the same
+  // time do not both write the sample data.
   static Future<void>? _seeding;
 
+  // ---------------------------------------------------------------------
+  // Sample data (first run only)
+  // ---------------------------------------------------------------------
+
+  /// Loads the sample members and tasks the very first time the app runs.
+  /// getTasks() and getMembers() call this automatically, so main.dart
+  /// does not have to remember to call it.
   static Future<void> ensureSeeded() {
     return _seeding ??= _seedIfFirstRun();
   }

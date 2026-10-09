@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
+  // Agreed in the shared contract:
   final String label;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final bool obscureText;
   final TextInputType? keyboardType;
 
+  // Optional extras (safe to ignore):
   final String? hint;
   final IconData? prefixIcon;
   final Widget? suffix;
@@ -92,11 +94,13 @@ class AppTextField extends StatelessWidget {
   }
 }
 
+/// Shared input checks. Each returns an error message, or null if valid.
 class Validators {
   Validators._();
 
   static final RegExp _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
+  /// Required field. Use as: validator: Validators.required('Full name')
   static String? Function(String?) required(String fieldName) {
     return (value) {
       if (value == null || value.trim().isEmpty) {

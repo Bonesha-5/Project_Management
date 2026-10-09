@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/team_members.dart';
+import '../screens/team_screen.dart';
 
 class MainShell extends StatefulWidget {
   final bool isDark;
@@ -40,6 +40,7 @@ class _MainShellState extends State<MainShell> {
     });
   }
 
+  /// Builds the page for a tab. A new widget every time, so it reloads.
   Widget _buildPage(int index) {
     switch (index) {
       case 0:

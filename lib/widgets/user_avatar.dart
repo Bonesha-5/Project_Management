@@ -23,7 +23,7 @@ class UserAvatar extends StatelessWidget {
   ];
 
   /// Picks a palette colour from the name, so the same name always gets
-  /// the same colour. Used when creating a member: avatarColor: ...
+  /// the same colour. Use it when creating a member: avatarColor: ...
   static int colorValueForName(String name) {
     final sum = name.trim().codeUnits.fold<int>(0, (a, b) => a + b);
     return palette[sum % palette.length];
