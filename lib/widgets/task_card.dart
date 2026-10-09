@@ -12,50 +12,96 @@ class TaskCard extends StatelessWidget {
   final Member? member;
   final VoidCallback onTap;
 
-  const TaskCard({super.key, required this.task, required this.member, required this.onTap});
+  const TaskCard({
+    super.key,
+    required this.task,
+    required this.member,
+    required this.onTap,
+  });
+
+  Color get _priorityColor => switch (task.priority) {
+        Priority.high => AppTheme.red,
+        Priority.medium => AppTheme.amber,
+        Priority.low => AppTheme.teal,
+      };
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
     final status = SlaService.computeStatus(task, DateTime.now());
-    final priorityColor = switch (task.priority) {
-      Priority.low => AppTheme.teal,
-      Priority.medium => AppTheme.amber,
-      Priority.high => AppTheme.red,
-    };
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.all(14),
+          child: Row(
             children: [
-              Row(children: [
-                Expanded(child: Text(task.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800))),
-                StatusPill(status: status),
-              ]),
-              const SizedBox(height: 12),
-              Row(children: [
-                if (member != null) ...[UserAvatar(member: member!, radius: 16), const SizedBox(width: 8)],
-                Expanded(child: Text(member?.name ?? 'Unassigned', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
-                Icon(Icons.calendar_today_rounded, size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                const SizedBox(width: 4),
-                Text(DateFormat('MMM d').format(task.dueDate)),
-              ]),
-              const SizedBox(height: 12),
-              Row(children: [
-                Text(task.priority.name[0].toUpperCase() + task.priority.name.substring(1),
-                    style: TextStyle(color: priorityColor, fontWeight: FontWeight.w700)),
-                const Spacer(),
-                Text('${task.progress.round()}% done', style: const TextStyle(fontWeight: FontWeight.w700)),
-              ]),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(99),
-                child: LinearProgressIndicator(value: task.progress / 100, minHeight: 7),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        if (member != null)
+                          UserAvatar(member: member!, radius: 13)
+                        else
+                          CircleAvatar(
+                            radius: 13,
+                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            child: Icon(Icons.person_outline, size: 14, color: muted),
+                          ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            member == null
+                                ? 'Unassigned'
+                                : 'Due ${DateFormat('MMM d').format(task.dueDate)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (member == null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        'Due ${DateFormat('MMM d').format(task.dueDate)}',
+                        style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  StatusPill(status: status),
+                  const SizedBox(height: 14),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.flag, size: 16, color: _priorityColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        task.priority.label,
+                        style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

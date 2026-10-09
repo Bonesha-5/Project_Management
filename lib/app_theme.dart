@@ -48,10 +48,21 @@ class AppTheme {
           seedColor: purple,
           brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: const Color(0xFF0F0B18),
+        scaffoldBackgroundColor: const Color(0xFF1A0E3D),
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: const Color(0xFF2E1A66),
+          indicatorColor: purple,
+          height: 68,
+          labelTextStyle: WidgetStatePropertyAll(
+            const TextStyle(fontSize: 11, color: Colors.white),
+          ),
+          iconTheme: const WidgetStatePropertyAll(
+            IconThemeData(color: Colors.white),
+          ),
+        ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: const Color(0xFF21182D),
+          fillColor: const Color(0xFF08050F),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide.none,
@@ -59,7 +70,7 @@ class AppTheme {
         ),
         cardTheme: CardThemeData(
           elevation: 0,
-          color: const Color(0xFF191321),
+          color: const Color(0xFF0D0916),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
