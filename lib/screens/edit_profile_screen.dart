@@ -44,8 +44,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final user = await AuthService.currentUser();
     if (!mounted) return;
     if (user == null) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/sign-in', (_) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/sign-in', (_) => false);
       return;
     }
     setState(() {
@@ -120,9 +119,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final theme = Theme.of(context);
 
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -141,8 +138,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(width: 4),
                   Text(
                     'Edit Profile',
-                    style: theme.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),

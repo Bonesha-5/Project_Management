@@ -188,8 +188,9 @@ class SlaService {
     int limit = 5,
   }) {
     final list = tasks
-        .where((t) =>
-            t.status != TaskStatus.done && !now.isAfter(deadlineOf(t)))
+        .where(
+          (t) => t.status != TaskStatus.done && !now.isAfter(deadlineOf(t)),
+        )
         .toList();
     list.sort((a, b) => deadlineOf(a).compareTo(deadlineOf(b)));
     return list.take(limit).toList();

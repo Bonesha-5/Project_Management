@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/member.dart';
 import '../models/task.dart';
 import '../services/storage_service.dart';
@@ -37,7 +38,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   void _snack(String message) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
 
   Future<void> _create(Task draft) async {
     try {
@@ -66,7 +68,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         child: _loading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,11 +78,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.maybePop(context),
-                          child: const Text('←', style: TextStyle(fontSize: 24)),
+                          child: const Text(
+                            '←',
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ),
-                        Text('New Task',
-                            style: theme.textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w800)),
+                        Text(
+                          'New Task',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 12),

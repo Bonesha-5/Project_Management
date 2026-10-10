@@ -21,7 +21,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   static const _dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
-
   List<Task> _tasks = [];
   List<Member> _members = [];
   Member? _user;
@@ -63,10 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   /// Opens another screen and reloads when the user comes back,
   /// so the numbers always match the latest data.
   Future<void> _open(Widget screen) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => screen),
-    );
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
     _loadData();
   }
 
@@ -110,7 +106,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: _loadData, child: const Text('Try again')),
+              FilledButton(
+                onPressed: _loadData,
+                child: const Text('Try again'),
+              ),
             ],
           ),
         ),
@@ -131,12 +130,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Text(
             '${SlaService.greeting(now)}, $_firstName',
-            style: theme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 4),
-          Text('Here is how the project is doing',
-              style: theme.textTheme.bodyMedium),
+          Text(
+            'Here is how the project is doing',
+            style: theme.textTheme.bodyMedium,
+          ),
           const SizedBox(height: 20),
           _progressCard(progress, SlaService.completedCount(_tasks)),
           const SizedBox(height: 16),
@@ -166,8 +168,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Overall project progress',
-              style: TextStyle(color: Colors.white70)),
+          const Text(
+            'Overall project progress',
+            style: TextStyle(color: Colors.white70),
+          ),
           const SizedBox(height: 8),
           Text(
             '${progress.round()}%',
@@ -200,7 +204,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _statGrid(Map<SlaStatus, int> counts) {
     final primary = Theme.of(context).colorScheme.primary;
     final cards = <Widget>[
-      StatCard(label: 'Team Members', value: '${_members.length}', color: primary),
+      StatCard(
+        label: 'Team Members',
+        value: '${_members.length}',
+        color: primary,
+      ),
       StatCard(label: 'Total Tasks', value: '${_tasks.length}', color: primary),
       for (final status in SlaStatus.values)
         StatCard(
@@ -225,11 +233,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('This week',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          'This week',
+          style: Theme.of(context).textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -294,15 +302,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Needs attention',
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          'Needs attention',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 12),
         if (attention.isEmpty)
           const InsightCard(
-            child: Center(
-              child: Text('Nothing needs attention. Great work!'),
-            ),
+            child: Center(child: Text('Nothing needs attention. Great work!')),
           )
         else
           for (final task in attention) _attentionTile(task, now),
@@ -329,8 +338,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       task.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -338,8 +348,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               const SizedBox(height: 4),
-              Text('Assigned to ${_assigneeName(task.assigneeId)}',
-                  style: theme.textTheme.bodySmall),
+              Text(
+                'Assigned to ${_assigneeName(task.assigneeId)}',
+                style: theme.textTheme.bodySmall,
+              ),
               const SizedBox(height: 12),
               LabeledBar(
                 label: 'Time used',

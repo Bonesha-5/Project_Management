@@ -17,7 +17,6 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
-
   List<Task> _tasks = [];
   List<Member> _members = [];
   bool _loading = true;
@@ -70,7 +69,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: _loadData, child: const Text('Try again')),
+              FilledButton(
+                onPressed: _loadData,
+                child: const Text('Try again'),
+              ),
             ],
           ),
         ),
@@ -85,9 +87,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
         children: [
-          Text('Statistics',
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            'Statistics',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 16),
           if (_tasks.isEmpty)
             const InsightCard(
@@ -120,9 +125,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         text,
-        style: Theme.of(context)
-            .textTheme
-            .titleMedium
+        style: Theme.of(context).textTheme.titleMedium
             ?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
@@ -176,8 +179,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   children: [
                     Text(
                       '${counts[status]}',
-                      style: textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Container(
@@ -272,11 +276,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           task.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Text(dateFormat.format(task.dueDate),
-                            style: textTheme.bodySmall),
+                        Text(
+                          dateFormat.format(task.dueDate),
+                          style: textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ),

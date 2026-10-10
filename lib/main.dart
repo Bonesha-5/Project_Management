@@ -66,9 +66,9 @@ class _MomentumAppState extends State<MomentumApp> {
         '/profile': (context) => const ProfileScreen(),
         '/edit-profile': (context) => const EditProfileScreen(),
         '/app-settings': (context) => AppSettingsScreen(
-              initialDarkMode: _isDark,
-              onThemeChanged: _setDarkMode,
-            ),
+          initialDarkMode: _isDark,
+          onThemeChanged: _setDarkMode,
+        ),
 
         // After sign in: the bottom bar with the five tabs.
         '/dashboard': (context) => const MainShell(),
@@ -110,8 +110,6 @@ class _StartupGateState extends State<_StartupGate> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

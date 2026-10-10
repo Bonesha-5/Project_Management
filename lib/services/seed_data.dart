@@ -83,7 +83,7 @@ class SeedData {
         dueDate: now.add(dueIn),
         priority: priority,
         status: status,
-        progress: progress,
+        progress: progress.toDouble(),
         notes: notes,
       );
     }

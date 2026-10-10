@@ -20,7 +20,7 @@ void main() {
 
   test('sample tasks cover all four SLA statuses (5/3/2/2)', () {
     final now = DateTime.now();
-    final counts = SlaService.countsByStatus(SeedData.tasks(now), now);
+    final counts = SlaService.countByStatus(SeedData.tasks(now), now);
     expect(counts[SlaStatus.onTrack], 5);
     expect(counts[SlaStatus.atRisk], 3);
     expect(counts[SlaStatus.overdue], 2);

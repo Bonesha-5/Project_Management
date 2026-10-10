@@ -61,8 +61,9 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                   const SizedBox(width: 4),
                   Text(
                     'App Settings',
-                    style: theme.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),

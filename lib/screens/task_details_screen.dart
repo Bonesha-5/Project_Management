@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../app_theme.dart';
 import '../models/member.dart';
 import '../models/task.dart';
@@ -72,7 +73,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<bool> _persist(Task updated) async {
@@ -94,13 +96,25 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   Future<void> _changeStatus(TaskStatus status) async {
     final t = _task;
     if (t == null || t.status == status) return;
-    await _persist(t.copyWith(status: status, progress: status == TaskStatus.done ? 100 : t.progress));
+    await _persist(
+      t.copyWith(
+        status: status,
+        progress: status == TaskStatus.done ? 100 : t.progress,
+      ),
+    );
   }
 
   void _onProgressChanged(double v) {
     final t = _task;
     if (t == null) return;
-    setState(() => _task = t.copyWith(progress: v, status: t.status == TaskStatus.done && v < 100 ? TaskStatus.inProgress : t.status));
+    setState(
+      () => _task = t.copyWith(
+        progress: v,
+        status: t.status == TaskStatus.done && v < 100
+            ? TaskStatus.inProgress
+            : t.status,
+      ),
+    );
   }
 
   Future<void> _onProgressEnd(double v) async {
@@ -133,7 +147,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         title: const Text('Delete task?'),
         content: const Text('This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: AppTheme.red),
@@ -156,11 +173,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
 
   Color _slaColor(SlaStatus s) => switch (s) {
-        SlaStatus.onTrack => AppTheme.teal,
-        SlaStatus.atRisk => AppTheme.amber,
-        SlaStatus.overdue => AppTheme.red,
-        SlaStatus.completed => AppTheme.purple,
-      };
+    SlaStatus.onTrack => AppTheme.teal,
+    SlaStatus.atRisk => AppTheme.amber,
+    SlaStatus.overdue => AppTheme.red,
+    SlaStatus.completed => AppTheme.purple,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -178,28 +195,43 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : _task == null
-                  ? _notFound()
-                  : _content(_task!),
+              ? _notFound()
+              : _content(_task!),
         ),
       ),
     );
   }
 
   Widget _backButton() => TextButton(
-        onPressed: () => Navigator.maybePop(context),
-        child: const Text('←', style: TextStyle(fontSize: 24)),
-      );
+    onPressed: () => Navigator.maybePop(context),
+    child: const Text('←', style: TextStyle(fontSize: 24)),
+  );
 
   Widget _notFound() => ListView(
-        padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(20),
+    children: [
+      Row(
         children: [
-          Row(children: [_backButton(), const Text('Task Details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800))]),
-          const SizedBox(height: 80),
-          Icon(Icons.search_off, size: 56, color: Theme.of(context).colorScheme.onSurfaceVariant),
-          const SizedBox(height: 12),
-          const Text('This task could not be found. It may have been deleted.', textAlign: TextAlign.center),
+          _backButton(),
+          const Text(
+            'Task Details',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          ),
         ],
-      );
+      ),
+      const SizedBox(height: 80),
+      Icon(
+        Icons.search_off,
+        size: 56,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      const SizedBox(height: 12),
+      const Text(
+        'This task could not be found. It may have been deleted.',
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
 
   Widget _content(Task t) {
     final theme = Theme.of(context);
@@ -216,8 +248,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           children: [
             _backButton(),
             Expanded(
-              child: Text('Task Details',
-                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+              child: Text(
+                'Task Details',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ),
             IconButton(
               tooltip: 'Delete task',
@@ -227,11 +263,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ],
         ),
         const SizedBox(height: 8),
-        Text(t.title,
-            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+        Text(
+          t.title,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w900,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(t.description.trim().isEmpty ? 'No description' : t.description,
-            style: theme.textTheme.bodyMedium?.copyWith(color: muted)),
+        Text(
+          t.description.trim().isEmpty ? 'No description' : t.description,
+          style: theme.textTheme.bodyMedium?.copyWith(color: muted),
+        ),
         const SizedBox(height: 16),
         Card(
           clipBehavior: Clip.antiAlias,
@@ -249,8 +291,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: Text('SLA Status',
-                                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                              child: Text(
+                                'SLA Status',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                             StatusPill(status: status),
                           ],
@@ -260,7 +306,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         const SizedBox(height: 10),
                         _progressLine('Work done', t.progress, AppTheme.purple),
                         const SizedBox(height: 12),
-                        Text(SlaService.message(t, now), style: theme.textTheme.bodyMedium),
+                        Text(
+                          SlaService.message(t, now),
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       ],
                     ),
                   ),
@@ -285,7 +334,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Text('Status', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
+        Text(
+          'Status',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
@@ -293,15 +347,26 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             showSelectedIcon: false,
             segments: [
               for (final s in TaskStatus.values)
-                ButtonSegment(value: s, label: Text(s.label, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                ButtonSegment(
+                  value: s,
+                  label: Text(
+                    s.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
             ],
             selected: {t.status},
             onSelectionChanged: (s) => _changeStatus(s.first),
           ),
         ),
         const SizedBox(height: 16),
-        Text('Work done: ${t.progress.round()}%',
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
+        Text(
+          'Work done: ${t.progress.round()}%',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
         Slider(
           value: t.progress,
           min: 0,
@@ -312,7 +377,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           onChangeEnd: _onProgressEnd,
         ),
         const SizedBox(height: 8),
-        Text('Notes', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
+        Text(
+          'Notes',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: _notesController,
@@ -331,9 +401,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             style: FilledButton.styleFrom(
               backgroundColor: AppTheme.purple,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
-            child: const Text('Edit Task →', style: TextStyle(fontWeight: FontWeight.w700)),
+            child: const Text(
+              'Edit Task →',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       ],
@@ -341,35 +416,45 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
 
   Widget _infoRow(String label, String value) => Row(
-        children: [
-          Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(value,
-                textAlign: TextAlign.end,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w800)),
-          ),
-        ],
-      );
+    children: [
+      Text(
+        label,
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: Text(
+          value,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+      ),
+    ],
+  );
 
   Widget _progressLine(String label, double percent, Color color) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
         children: [
-          Row(children: [
-            Expanded(child: Text(label)),
-            Text('${percent.round()}%', style: const TextStyle(fontWeight: FontWeight.w700)),
-          ]),
-          const SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: (percent / 100).clamp(0.0, 1.0),
-              minHeight: 8,
-              color: color,
-              backgroundColor: color.withValues(alpha: .15),
-            ),
+          Expanded(child: Text(label)),
+          Text(
+            '${percent.round()}%',
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ],
-      );
+      ),
+      const SizedBox(height: 4),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(99),
+        child: LinearProgressIndicator(
+          value: (percent / 100).clamp(0.0, 1.0),
+          minHeight: 8,
+          color: color,
+          backgroundColor: color.withValues(alpha: .15),
+        ),
+      ),
+    ],
+  );
 }

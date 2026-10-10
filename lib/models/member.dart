@@ -42,14 +42,14 @@ class Member {
   // ---------------------------------------------------------------------------
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'email': email,
-        'title': title,
-        'password': password,
-        'avatarColor': avatarColor,
-        'hasLogin': hasLogin,
-      };
+    'id': id,
+    'name': name,
+    'email': email,
+    'title': title,
+    'password': password,
+    'avatarColor': avatarColor,
+    'hasLogin': hasLogin,
+  };
 
   /// Safe deserialization: every field falls back to a sensible default
   /// so a corrupted or partial record does not crash the app.

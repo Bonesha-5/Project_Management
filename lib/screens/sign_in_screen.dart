@@ -66,8 +66,7 @@ class _SignInScreenState extends State<SignInScreen> {
         return;
       }
 
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/dashboard', (_) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/dashboard', (_) => false);
     } catch (e) {
       if (!mounted) return;
       _showSnack(e.toString().replaceFirst('Exception: ', ''));
@@ -80,10 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
   }
 
@@ -188,11 +184,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      onPressed: () => setState(
-                          () => _obscurePassword = !_obscurePassword),
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
                   ),
                   validator: _validatePassword,

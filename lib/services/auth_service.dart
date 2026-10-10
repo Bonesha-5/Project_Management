@@ -28,9 +28,7 @@ class AuthService {
     final members = await StorageService.getMembers();
     final email = member.email.trim().toLowerCase();
 
-    final exists = members.any(
-      (m) => m.email.trim().toLowerCase() == email,
-    );
+    final exists = members.any((m) => m.email.trim().toLowerCase() == email);
     if (exists) {
       throw Exception('Email already in use');
     }

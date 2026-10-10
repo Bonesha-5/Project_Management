@@ -114,8 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (!mounted) return;
       // 4. Replace the whole stack so back from Dashboard does not return
       //    to Sign Up. See INTEGRATION POINT #1 in main.dart.
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/dashboard', (_) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/dashboard', (_) => false);
     } catch (e) {
       // 5. AuthService throws with a readable message. Strip "Exception: ".
       final msg = e.toString().replaceFirst('Exception: ', '');
@@ -130,10 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
   }
 
@@ -161,8 +157,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(width: 4),
                   Text(
                     'Create Account',
-                    style: theme.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -218,10 +215,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           prefixIcon: Icon(Icons.badge_outlined),
                         ),
                         items: _roles
-                            .map((r) => DropdownMenuItem<String>(
-                                  value: r,
-                                  child: Text(r),
-                                ))
+                            .map(
+                              (r) => DropdownMenuItem<String>(
+                                value: r,
+                                child: Text(r),
+                              ),
+                            )
                             .toList(),
                         onChanged: (value) => setState(() => _role = value),
                         validator: (v) =>
@@ -239,11 +238,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: 'At least 6 characters',
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
                             onPressed: () => setState(
-                                () => _obscurePassword = !_obscurePassword),
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
                           ),
                         ),
                         validator: _validatePassword,
@@ -261,11 +263,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: 'Re-enter your password',
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscureConfirm
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
+                            icon: Icon(
+                              _obscureConfirm
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
                             onPressed: () => setState(
-                                () => _obscureConfirm = !_obscureConfirm),
+                              () => _obscureConfirm = !_obscureConfirm,
+                            ),
                           ),
                         ),
                         validator: _validateConfirm,
@@ -299,8 +304,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           TextButton(
                             onPressed: _submitting
                                 ? null
-                                : () => Navigator.of(context)
-                                    .pushReplacementNamed('/sign-in'),
+                                : () =>
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/sign-in'),
                             child: const Text('Sign In →'),
                           ),
                         ],

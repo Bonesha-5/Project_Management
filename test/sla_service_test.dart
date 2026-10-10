@@ -157,9 +157,9 @@ void main() {
 
   group('workloadFor', () {
     List<Task> openTasks(int n) => List.generate(
-          n,
-          (i) => makeTask(id: 'x$i', due: DateTime(2026, 10, 20)),
-        );
+      n,
+      (i) => makeTask(id: 'x$i', due: DateTime(2026, 10, 20)),
+    );
 
     test('0 to 2 open tasks is Balanced', () {
       expect(SlaService.workloadFor('m1', openTasks(0)), Workload.balanced);

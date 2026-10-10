@@ -71,8 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     await AuthService.signOut();
     if (!mounted) return;
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/sign-in', (_) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/sign-in', (_) => false);
   }
 
   // ─────────────────────────── Build ───────────────────────────
@@ -82,21 +81,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
 
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     // Safety: if there is no user for any reason, send to Sign In.
     if (_user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/sign-in', (_) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil('/sign-in', (_) => false);
       });
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final user = _user!;
@@ -134,8 +128,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Center(
               child: Text(
                 user.name,
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             const SizedBox(height: 4),

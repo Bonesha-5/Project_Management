@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../app_theme.dart';
 import '../models/member.dart';
 import '../models/task.dart';
@@ -62,7 +63,8 @@ class _TaskFormState extends State<TaskForm> {
     super.dispose();
   }
 
-  String _format(DateTime? d) => d == null ? '' : DateFormat('MMM d, yyyy').format(d);
+  String _format(DateTime? d) =>
+      d == null ? '' : DateFormat('MMM d, yyyy').format(d);
 
   DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
@@ -93,7 +95,8 @@ class _TaskFormState extends State<TaskForm> {
   String? _validateDate(DateTime? value) {
     if (value == null) return 'Please select a due date';
     final existing = widget.initialTask?.dueDate;
-    final unchanged = existing != null && _dateOnly(existing) == _dateOnly(value);
+    final unchanged =
+        existing != null && _dateOnly(existing) == _dateOnly(value);
     if (!unchanged && _dateOnly(value).isBefore(_dateOnly(DateTime.now()))) {
       return 'Due date cannot be in the past';
     }
@@ -143,8 +146,9 @@ class _TaskFormState extends State<TaskForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final labelStyle =
-        theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800);
+    final labelStyle = theme.textTheme.labelLarge?.copyWith(
+      fontWeight: FontWeight.w800,
+    );
 
     return Form(
       key: _formKey,
@@ -156,7 +160,9 @@ class _TaskFormState extends State<TaskForm> {
           TextFormField(
             controller: _title,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(hintText: 'e.g. Build settings screen'),
+            decoration: const InputDecoration(
+              hintText: 'e.g. Build settings screen',
+            ),
             validator: (v) =>
                 (v == null || v.trim().isEmpty) ? 'Title is required' : null,
           ),
@@ -168,7 +174,9 @@ class _TaskFormState extends State<TaskForm> {
             minLines: 3,
             maxLines: 5,
             keyboardType: TextInputType.multiline,
-            decoration: const InputDecoration(hintText: 'What needs to be done?'),
+            decoration: const InputDecoration(
+              hintText: 'What needs to be done?',
+            ),
           ),
           const SizedBox(height: 16),
           Text('Assign to *', style: labelStyle),
@@ -254,7 +262,9 @@ class _TaskFormState extends State<TaskForm> {
               style: FilledButton.styleFrom(
                 backgroundColor: AppTheme.purple,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               child: _saving
                   ? const SizedBox(
@@ -262,8 +272,10 @@ class _TaskFormState extends State<TaskForm> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(widget.submitLabel,
-                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  : Text(
+                      widget.submitLabel,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
             ),
           ),
         ],

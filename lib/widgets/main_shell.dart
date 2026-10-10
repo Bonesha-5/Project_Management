@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../screens/dashboard_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/statistics_screen.dart';
+import '../screens/task_list_screen.dart';
 import '../screens/team_screen.dart';
 
 class MainShell extends StatefulWidget {
-  final bool isDark;
-  final ValueChanged<bool> onThemeChanged;
   final int initialIndex;
 
-  const MainShell({
-    super.key,
-    required this.isDark,
-    required this.onThemeChanged,
-    this.initialIndex = 0,
-  });
+  const MainShell({super.key, this.initialIndex = 0});
 
   @override
   State<MainShell> createState() => _MainShellState();
@@ -44,22 +41,15 @@ class _MainShellState extends State<MainShell> {
   Widget _buildPage(int index) {
     switch (index) {
       case 0:
-        return const _WaitingPage(title: 'Home', owner: 'Jospin');
-      // return const DashboardScreen();
+        return const DashboardScreen();
       case 1:
-        return const _WaitingPage(title: 'Tasks', owner: 'Deborah');
-      // return const TaskListScreen();
+        return const TaskListScreen();
       case 2:
         return const TeamScreen();
       case 3:
-        return const _WaitingPage(title: 'Stats', owner: 'Jospin');
-      // return const StatisticsScreen();
+        return const StatisticsScreen();
       default:
-        return const _WaitingPage(title: 'Profile', owner: 'Byusa');
-      // return ProfileScreen(
-      //   isDark: widget.isDark,
-      //   onThemeChanged: widget.onThemeChanged,
-      // );
+        return const ProfileScreen();
     }
   }
 
@@ -184,39 +174,6 @@ class _NavButton extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Temporary page shown until a teammate's screen is merged.
-class _WaitingPage extends StatelessWidget {
-  final String title;
-  final String owner;
-
-  const _WaitingPage({required this.title, required this.owner});
-
-  @override
-  Widget build(BuildContext context) {
-    final muted = Theme.of(context).colorScheme.onSurface.withAlpha(140);
-    return SafeArea(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.construction_rounded, size: 40, color: muted),
-            const SizedBox(height: 12),
-            Text(
-              '$title screen',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Arrives when $owner merges it',
-              style: TextStyle(color: muted),
-            ),
-          ],
         ),
       ),
     );

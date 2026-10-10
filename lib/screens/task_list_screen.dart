@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../app_theme.dart';
 import '../models/member.dart';
 import '../models/task.dart';
@@ -51,7 +52,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
       if (!mounted) return;
       setState(() => _loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not load tasks. Please try again.')),
+        const SnackBar(
+          content: Text('Could not load tasks. Please try again.'),
+        ),
       );
     }
   }
@@ -101,9 +104,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
             : ListView(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 96),
                 children: [
-                  Text('Tasks',
-                      style: theme.textTheme.headlineMedium
-                          ?.copyWith(fontWeight: FontWeight.w900)),
+                  Text(
+                    'Tasks',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                   const SizedBox(height: 14),
                   TextField(
                     onChanged: (v) => setState(() => _search = v),
@@ -124,7 +130,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               label: Text(e.key),
                               selected: _filter == e.value,
                               shape: const StadiumBorder(),
-                              onSelected: (_) => setState(() => _filter = e.value),
+                              onSelected: (_) =>
+                                  setState(() => _filter = e.value),
                             ),
                           ),
                       ],
@@ -161,13 +168,19 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Column(
         children: [
-          Icon(Icons.checklist_rounded,
-              size: 56, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            Icons.checklist_rounded,
+            size: 56,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           const SizedBox(height: 12),
-          Text(message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );

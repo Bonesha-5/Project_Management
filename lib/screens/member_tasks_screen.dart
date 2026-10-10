@@ -6,6 +6,7 @@ import '../services/sla_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/status_pill.dart';
 import '../widgets/user_avatar.dart';
+import 'task_details_screen.dart';
 
 class MemberTasksScreen extends StatefulWidget {
   final Member member;
@@ -63,14 +64,11 @@ class _MemberTasksScreenState extends State<MemberTasksScreen> {
 
   /// Opens Task Details for a task, then reloads in case it changed.
   Future<void> _openTask(Task task) async {
-    // When Deborah's Task Details is merged, replace the SnackBar with
-    // these lines (check her constructor - it may take the task or its id):
-    // await Navigator.push(context, MaterialPageRoute(
-    //     builder: (_) => TaskDetailsScreen(task: task)));
-    // await _loadTasks();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Task Details for "${task.title}" coming soon')),
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => TaskDetailsScreen(taskId: task.id)),
     );
+    await _loadTasks();
   }
 
   @override
@@ -205,7 +203,7 @@ class _TaskTile extends StatelessWidget {
     final muted = Theme.of(context).colorScheme.onSurface.withAlpha(150);
     final status = SlaService.computeStatus(task, DateTime.now());
     final statusColor = StatusPill.colorFor(status);
-    final progress = task.progress.clamp(0, 100);
+    final progress = task.progress.round().clamp(0, 100);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),

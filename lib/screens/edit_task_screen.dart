@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/member.dart';
 import '../models/task.dart';
 import '../services/storage_service.dart';
@@ -45,7 +46,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   }
 
   void _snack(String message) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
 
   Future<void> _save(Task edited) async {
     try {
@@ -70,7 +72,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         child: _loading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,18 +82,26 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.maybePop(context),
-                          child: const Text('←', style: TextStyle(fontSize: 24)),
+                          child: const Text(
+                            '←',
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ),
-                        Text('Edit Task',
-                            style: theme.textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w800)),
+                        Text(
+                          'Edit Task',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     if (_task == null)
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 60),
-                        child: Center(child: Text('This task could not be found.')),
+                        child: Center(
+                          child: Text('This task could not be found.'),
+                        ),
                       )
                     else
                       TaskForm(
