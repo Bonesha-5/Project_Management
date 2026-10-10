@@ -2,29 +2,234 @@ import '../models/member.dart';
 import '../models/task.dart';
 
 class SeedData {
-  static List<Member> members() => [
-        Member(id: 'm1', name: 'Byusa Martin', email: 'byusa@momentum.dev', title: 'Flutter Developer', password: 'password', hasLogin: true),
-        Member(id: 'm2', name: 'Jospin Nganji', email: 'jospin@momentum.dev', title: 'SLA & Insights Lead'),
-        Member(id: 'm3', name: 'Uwineza Kevine', email: 'uwineza@momentum.dev', title: 'Data & Tasks Lead'),
-        Member(id: 'm4', name: 'Aline Mukamana', email: 'aline@momentum.dev', title: 'UI Designer'),
-        Member(id: 'm5', name: 'Eric Habimana', email: 'eric@momentum.dev', title: 'QA Engineer'),
-      ];
+  SeedData._();
 
-  static List<Task> tasks() {
-    final now = DateTime.now();
+  // Fixed ids so tasks can point to members.
+  static const String sarahId = 'seed-member-sarah';
+  static const String michaelId = 'seed-member-michael';
+  static const String emilyId = 'seed-member-emily';
+  static const String davidId = 'seed-member-david';
+  static const String johnId = 'seed-member-john';
+
+  /// The five sample team members. Only John Doe has a login.
+  static List<Member> members() => [
+    Member(
+      id: sarahId,
+      name: 'Sarah Lee',
+      email: 'sarah@email.com',
+      title: 'UI/UX Designer',
+      password: '',
+      avatarColor: 0xFFEC4899, // Pink
+      hasLogin: false,
+    ),
+    Member(
+      id: michaelId,
+      name: 'Michael Kim',
+      email: 'michael@email.com',
+      title: 'Mobile Developer',
+      password: '',
+      avatarColor: 0xFF14B8A6, // Teal
+      hasLogin: false,
+    ),
+    Member(
+      id: emilyId,
+      name: 'Emily Wong',
+      email: 'emily@email.com',
+      title: 'QA Tester',
+      password: '',
+      avatarColor: 0xFFF59E0B, // Amber
+      hasLogin: false,
+    ),
+    Member(
+      id: davidId,
+      name: 'David Liu',
+      email: 'david@email.com',
+      title: 'Documentation',
+      password: '',
+      avatarColor: 0xFF7C3AED, // Primary Purple
+      hasLogin: false,
+    ),
+    Member(
+      id: johnId,
+      name: 'John Doe',
+      email: 'john@email.com',
+      title: 'Project Manager',
+      password: 'password123', // Simulated sign-in only, not real security.
+      avatarColor: 0xFF4C1D95, // Deep Purple
+      hasLogin: true,
+    ),
+  ];
+
+  /// The twelve sample tasks, with dates relative to [now].
+  static List<Task> tasks(DateTime now) {
+    Task make({
+      required String id,
+      required String title,
+      required String description,
+      required String assigneeId,
+      required Duration createdAgo,
+      required Duration dueIn, // Negative means the due date has passed.
+      required Priority priority,
+      required TaskStatus status,
+      required int progress,
+      String notes = '',
+    }) {
+      return Task(
+        id: id,
+        title: title,
+        description: description,
+        assigneeId: assigneeId,
+        createdAt: now.subtract(createdAgo),
+        dueDate: now.add(dueIn),
+        priority: priority,
+        status: status,
+        progress: progress,
+        notes: notes,
+      );
+    }
+
     return [
-      Task(id: 't1', title: 'Design authentication flow', description: 'Prepare sign-in and sign-up UX.', assigneeId: 'm1', createdAt: now.subtract(const Duration(days: 4)), dueDate: now.add(const Duration(days: 3)), priority: Priority.high, status: TaskStatus.inProgress, progress: 70, notes: 'UI flow is nearly complete.'),
-      Task(id: 't2', title: 'Implement SLA service', description: 'Build status and time-used calculations.', assigneeId: 'm2', createdAt: now.subtract(const Duration(days: 5)), dueDate: now.add(const Duration(days: 2)), priority: Priority.high, status: TaskStatus.inProgress, progress: 60),
-      Task(id: 't3', title: 'Create task storage layer', description: 'Persist tasks and members locally.', assigneeId: 'm3', createdAt: now.subtract(const Duration(days: 6)), dueDate: now.subtract(const Duration(hours: 5)), priority: Priority.high, status: TaskStatus.inProgress, progress: 55),
-      Task(id: 't4', title: 'Prepare dashboard cards', description: 'Build project overview and attention cards.', assigneeId: 'm2', createdAt: now.subtract(const Duration(days: 2)), dueDate: now.add(const Duration(hours: 30)), priority: Priority.medium, status: TaskStatus.todo, progress: 20),
-      Task(id: 't5', title: 'Write unit tests', description: 'Cover SLA boundary conditions.', assigneeId: 'm5', createdAt: now.subtract(const Duration(days: 7)), dueDate: now.add(const Duration(days: 6)), priority: Priority.medium, status: TaskStatus.todo, progress: 10),
-      Task(id: 't6', title: 'Build task cards', description: 'Reusable task list card.', assigneeId: 'm3', createdAt: now.subtract(const Duration(days: 3)), dueDate: now.add(const Duration(days: 5)), priority: Priority.low, status: TaskStatus.inProgress, progress: 45),
-      Task(id: 't7', title: 'Create profile screen', description: 'Profile and settings screens.', assigneeId: 'm1', createdAt: now.subtract(const Duration(days: 8)), dueDate: now.subtract(const Duration(days: 2)), priority: Priority.medium, status: TaskStatus.done, progress: 100),
-      Task(id: 't8', title: 'Review visual system', description: 'Review purple palette and components.', assigneeId: 'm4', createdAt: now.subtract(const Duration(days: 5)), dueDate: now.add(const Duration(days: 4)), priority: Priority.low, status: TaskStatus.done, progress: 100),
-      Task(id: 't9', title: 'Test persistence', description: 'Verify data after restart.', assigneeId: 'm5', createdAt: now.subtract(const Duration(days: 2)), dueDate: now.add(const Duration(days: 1)), priority: Priority.high, status: TaskStatus.todo, progress: 0),
-      Task(id: 't10', title: 'Add team member flow', description: 'Member creation and assignment.', assigneeId: 'm2', createdAt: now.subtract(const Duration(days: 2)), dueDate: now.add(const Duration(hours: 18)), priority: Priority.medium, status: TaskStatus.todo, progress: 25),
-      Task(id: 't11', title: 'Prepare technical report', description: 'Challenges, solutions and citations.', assigneeId: 'm2', createdAt: now.subtract(const Duration(days: 10)), dueDate: now.add(const Duration(days: 7)), priority: Priority.medium, status: TaskStatus.inProgress, progress: 50),
-      Task(id: 't12', title: 'Demo rehearsal', description: 'Practice the 10-15 minute demo.', assigneeId: 'm5', createdAt: now.subtract(const Duration(days: 1)), dueDate: now.add(const Duration(days: 2)), priority: Priority.high, status: TaskStatus.todo, progress: 0),
+      // ---------- On Track (due in more than 48 hours) ----------
+      make(
+        id: 'seed-task-01',
+        title: 'Design Login Screen',
+        description: 'Create the sign in layout in light and dark mode.',
+        assigneeId: sarahId,
+        createdAgo: const Duration(days: 2),
+        dueIn: const Duration(days: 6),
+        priority: Priority.high,
+        status: TaskStatus.inProgress,
+        progress: 30,
+      ),
+      make(
+        id: 'seed-task-02',
+        title: 'Build Statistics Charts',
+        description: 'Bar chart of tasks by status using plain widgets.',
+        assigneeId: michaelId,
+        createdAgo: const Duration(days: 1),
+        dueIn: const Duration(days: 7),
+        priority: Priority.medium,
+        status: TaskStatus.todo,
+        progress: 0,
+      ),
+      make(
+        id: 'seed-task-03',
+        title: 'Write Widget Tests',
+        description: 'Cover the shared form fields and buttons.',
+        assigneeId: emilyId,
+        createdAgo: const Duration(days: 2),
+        dueIn: const Duration(days: 5),
+        priority: Priority.medium,
+        status: TaskStatus.todo,
+        progress: 0,
+      ),
+      make(
+        id: 'seed-task-04',
+        title: 'Test Sign Up Flow',
+        description: 'Check every validation message on Sign Up.',
+        assigneeId: emilyId,
+        createdAgo: const Duration(days: 1),
+        dueIn: const Duration(days: 4),
+        priority: Priority.low,
+        status: TaskStatus.todo,
+        progress: 0,
+      ),
+      make(
+        id: 'seed-task-05',
+        title: 'Prepare Demo Script',
+        description: 'Order of screens and who speaks when.',
+        assigneeId: davidId,
+        createdAgo: const Duration(days: 2),
+        dueIn: const Duration(days: 8),
+        priority: Priority.low,
+        status: TaskStatus.inProgress,
+        progress: 20,
+      ),
+
+      // ---------- At Risk (not done, due in 48 hours or less) ----------
+      make(
+        id: 'seed-task-06',
+        title: 'Implement Local Storage',
+        description:
+            'Save tasks locally so data persists after the app closes.',
+        assigneeId: michaelId,
+        // 4.5 days ago, due in 1 day: about 82% of the time is used.
+        createdAgo: const Duration(days: 4, hours: 12),
+        dueIn: const Duration(days: 1),
+        priority: Priority.high,
+        status: TaskStatus.inProgress,
+        progress: 40,
+      ),
+      make(
+        id: 'seed-task-07',
+        title: 'Fix Overflow on Small Phones',
+        description: 'Remove the yellow and black stripes on small screens.',
+        assigneeId: emilyId,
+        createdAgo: const Duration(days: 3),
+        dueIn: const Duration(hours: 36),
+        priority: Priority.high,
+        status: TaskStatus.inProgress,
+        progress: 50,
+      ),
+      make(
+        id: 'seed-task-08',
+        title: 'Review Pull Requests',
+        description: 'Review open pull requests before the merge.',
+        assigneeId: michaelId,
+        createdAgo: const Duration(days: 2),
+        dueIn: const Duration(hours: 40),
+        priority: Priority.medium,
+        status: TaskStatus.todo,
+        progress: 10,
+      ),
+
+      // ---------- Overdue (not done, due date passed) ----------
+      make(
+        id: 'seed-task-09',
+        title: 'Create Task Model',
+        description: 'Task class with toJson and fromJson.',
+        assigneeId: emilyId,
+        createdAgo: const Duration(days: 8),
+        dueIn: const Duration(days: -3),
+        priority: Priority.medium,
+        status: TaskStatus.inProgress,
+        progress: 70,
+      ),
+      make(
+        id: 'seed-task-10',
+        title: 'Test Dark Mode Screens',
+        description: 'Open every screen in dark mode and note problems.',
+        assigneeId: emilyId,
+        createdAgo: const Duration(days: 5),
+        dueIn: const Duration(days: -1),
+        priority: Priority.medium,
+        status: TaskStatus.inProgress,
+        progress: 60,
+      ),
+
+      // ---------- Completed (status Done, progress 100) ----------
+      make(
+        id: 'seed-task-11',
+        title: 'Test Application',
+        description: 'First full test run on the emulator.',
+        assigneeId: davidId,
+        createdAgo: const Duration(days: 9),
+        dueIn: const Duration(days: -4),
+        priority: Priority.low,
+        status: TaskStatus.done,
+        progress: 100,
+      ),
+      make(
+        id: 'seed-task-12',
+        title: 'Set Up GitHub Repository',
+        description: 'Create the repository, branches and folder structure.',
+        assigneeId: johnId,
+        createdAgo: const Duration(days: 6),
+        dueIn: const Duration(days: -2),
+        priority: Priority.high,
+        status: TaskStatus.done,
+        progress: 100,
+      ),
     ];
   }
 }
