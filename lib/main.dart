@@ -8,27 +8,7 @@ import 'screens/sign_in_screen.dart';
 import 'screens/sign_up_screen.dart';
 import 'services/auth_service.dart';
 import 'services/storage_service.dart';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// INTEGRATION POINT #1 — the authenticated shell / dashboard.
-//
-// The team contract says the main app after sign-in is a shell that hosts the
-// bottom navigation bar (`widgets/main_shell.dart`, owned by Uwineza Kevine)
-// with the Dashboard as the Home tab (owned by Jospin Nganji).
-//
-// Until that file is merged, `_StartupGate` sends the user to a temporary
-// placeholder. When Kevine's file lands, change TWO things:
-//   1. Add the import at the top of this file:
-//        import 'widgets/main_shell.dart';
-//   2. In the `routes` map below, replace:
-//        '/dashboard': (context) => const _DashboardPlaceholder(),
-//      with:
-//        '/dashboard': (context) => const MainShell(),
-//      (or whatever the shell's real class name is — check main_shell.dart).
-//
-// You may delete the `_DashboardPlaceholder` class at the bottom of this file
-// once that is done.
-// ─────────────────────────────────────────────────────────────────────────────
+import 'widgets/main_shell.dart';
 
 Future<void> main() async {
   // Required before any plugin (SharedPreferences, etc.) is touched in main().
@@ -90,8 +70,8 @@ class _MomentumAppState extends State<MomentumApp> {
               onThemeChanged: _setDarkMode,
             ),
 
-        // See INTEGRATION POINT #1 at the top of this file.
-        '/dashboard': (context) => const _DashboardPlaceholder(),
+        // After sign in: the bottom bar with the five tabs.
+        '/dashboard': (context) => const MainShell(),
       },
     );
   }
@@ -132,49 +112,6 @@ class _StartupGateState extends State<_StartupGate> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Temporary dashboard placeholder (see INTEGRATION POINT #1)
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _DashboardPlaceholder extends StatelessWidget {
-  const _DashboardPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard (placeholder)')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.dashboard_outlined, size: 48),
-              const SizedBox(height: 16),
-              const Text(
-                'The real Dashboard is being built by Jospin Nganji and the '
-                'shell by Uwineza Kevine. When their files are merged, '
-                'replace this placeholder in main.dart.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: () async {
-                  await AuthService.signOut();
-                  if (!context.mounted) return;
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/sign-in', (_) => false);
-                },
-                child: const Text('Sign out'),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
