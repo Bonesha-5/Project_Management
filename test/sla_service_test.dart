@@ -24,7 +24,7 @@ Task makeTask({
     dueDate: due,
     priority: priority,
     status: status,
-    progress: progress,
+    progress: progress.toDouble(),
     notes: '',
     completedAt: completedAt,
   );

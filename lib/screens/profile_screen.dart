@@ -194,7 +194,7 @@ class _ProfileRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colour = destructive ? AppColors.red : theme.colorScheme.onSurface;
+    final colour = destructive ? AppTheme.red : theme.colorScheme.onSurface;
 
     return Card(
       child: InkWell(

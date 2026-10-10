@@ -119,7 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           width: 140,
                           height: 140,
                           decoration: const BoxDecoration(
-                            color: AppColors.softLavender,
+                            color: AppTheme.softLavender,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -127,14 +127,14 @@ class _SignInScreenState extends State<SignInScreen> {
                           width: 96,
                           height: 96,
                           decoration: const BoxDecoration(
-                            color: AppColors.lightPurple,
+                            color: AppTheme.lightPurple,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const Icon(
                           Icons.trending_up_rounded,
                           size: 56,
-                          color: AppColors.primaryPurple,
+                          color: AppTheme.purple,
                         ),
                       ],
                     ),
@@ -148,7 +148,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     'Momentum',
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.primaryPurple,
+                      color: AppTheme.purple,
                     ),
                   ),
                 ),

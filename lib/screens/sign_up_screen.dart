@@ -105,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: _role!,
         password: _passwordController.text,
         hasLogin: true,
-        avatarColor: AppColors.primaryPurple.toARGB32(),
+        avatarColor: AppTheme.purple.toARGB32(),
       );
 
       // 3. Save + sign in via AuthService.

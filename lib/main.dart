@@ -72,8 +72,8 @@ class _MomentumAppState extends State<MomentumApp> {
     return MaterialApp(
       title: 'Momentum',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
 
       // Startup gate decides Sign In vs Dashboard once, then redirects.
