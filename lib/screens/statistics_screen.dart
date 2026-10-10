@@ -1,30 +1,293 @@
 import 'package:flutter/material.dart';
-import '../app_theme.dart';
+import 'package:intl/intl.dart';
+
 import '../models/member.dart';
 import '../models/task.dart';
 import '../services/sla_service.dart';
 import '../services/storage_service.dart';
+import '../widgets/insight_widgets.dart';
 import '../widgets/status_pill.dart';
 
+/// Stats tab: status chart, on-time rate, workload per member, deadlines.
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
-  @override State<StatisticsScreen> createState()=>_StatisticsScreenState();
+
+  @override
+  State<StatisticsScreen> createState() => _StatisticsScreenState();
 }
-class _StatisticsScreenState extends State<StatisticsScreen>{
-  List<Task> tasks=[];List<Member> members=[];bool loading=true;
-  @override void initState(){super.initState();_load();}
-  Future<void> _load()async{final s=StorageService();tasks=await s.getTasks();members=await s.getMembers();if(mounted)setState(()=>loading=false);}
-  @override Widget build(BuildContext context){if(loading)return const Center(child:CircularProgressIndicator());final c=SlaService.counts(tasks,DateTime.now());final max=(c.values.fold<int>(0,(a,b)=>a>b?a:b));final upcoming=[...tasks]..sort((a,b)=>a.dueDate.compareTo(b.dueDate));return RefreshIndicator(onRefresh:_load,child:ListView(padding:const EdgeInsets.fromLTRB(20,20,20,30),children:[
-    const Text('Statistics',style:TextStyle(fontSize:28,fontWeight:FontWeight.w900)),const SizedBox(height:6),Text('A quick view of delivery health.',style:TextStyle(color:Theme.of(context).colorScheme.onSurfaceVariant)),const SizedBox(height:20),
-    Card(child:Padding(padding:const EdgeInsets.all(18),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('Tasks by SLA status',style:TextStyle(fontWeight:FontWeight.w900)),const SizedBox(height:18),...SlaStatus.values.map((s)=>_bar(SlaService.statusLabel(s),c[s]!,max,_color(s)))]))),
-    const SizedBox(height:12),
-    Row(children:[Expanded(child:_metric('On-time rate','${SlaService.onTimeRate(tasks).round()}%',Icons.schedule,AppTheme.teal)),const SizedBox(width:10),Expanded(child:_metric('High priority','${SlaService.openHighPriority(tasks)}',Icons.priority_high,AppTheme.red))]),
-    const SizedBox(height:12),
-    Card(child:Padding(padding:const EdgeInsets.all(18),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('Open tasks per member',style:TextStyle(fontWeight:FontWeight.w900)),const SizedBox(height:12),...members.map((m){final n=SlaService.openTasksFor(tasks,m.id);return Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[Expanded(child:Text(m.name)),Text('$n',style:const TextStyle(fontWeight:FontWeight.w900))]));})]))),
-    const SizedBox(height:12),
-    Card(child:Padding(padding:const EdgeInsets.all(18),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[const Text('Upcoming deadlines',style:TextStyle(fontWeight:FontWeight.w900)),const SizedBox(height:12),...upcoming.take(4).map((t)=>ListTile(contentPadding:EdgeInsets.zero,title:Text(t.title,style:const TextStyle(fontWeight:FontWeight.w700)),subtitle:Text('${t.dueDate.day}/${t.dueDate.month}/${t.dueDate.year}'),trailing:StatusPill(status:SlaService.computeStatus(t,DateTime.now())))]))),
-  ]));}
-  Color _color(SlaStatus s)=>switch(s){SlaStatus.onTrack=>AppTheme.teal,SlaStatus.atRisk=>AppTheme.amber,SlaStatus.overdue=>AppTheme.red,SlaStatus.completed=>AppTheme.purple};
-  Widget _bar(String label,int value,int max,Color color)=>Padding(padding:const EdgeInsets.only(bottom:12),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(children:[Expanded(child:Text(label)),Text('$value')]),const SizedBox(height:5),ClipRRect(borderRadius:BorderRadius.circular(99),child:LinearProgressIndicator(value:max==0?0:value/max,minHeight:8,color:color))]));
-  Widget _metric(String label,String value,IconData icon,Color color)=>Card(child:Padding(padding:const EdgeInsets.all(16),child:Column(children:[Icon(icon,color:color),const SizedBox(height:8),Text(value,style:const TextStyle(fontSize:24,fontWeight:FontWeight.w900)),Text(label)])));
+
+class _StatisticsScreenState extends State<StatisticsScreen> {
+  final StorageService _storage = StorageService();
+
+  List<Task> _tasks = [];
+  List<Member> _members = [];
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final tasks = await _storage.getTasks();
+      final members = await _storage.getMembers();
+      if (!mounted) return;
+      setState(() {
+        _tasks = tasks;
+        _members = members;
+        _loading = false;
+        _error = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = 'Could not load the statistics. Please try again.';
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not load the statistics.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: SafeArea(child: _buildBody()));
+  }
+
+  Widget _buildBody() {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_error != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(_error!, textAlign: TextAlign.center),
+              const SizedBox(height: 12),
+              FilledButton(onPressed: _loadData, child: const Text('Try again')),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final theme = Theme.of(context);
+    final now = DateTime.now();
+
+    return RefreshIndicator(
+      onRefresh: _loadData,
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
+        children: [
+          Text('Statistics',
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          if (_tasks.isEmpty)
+            const InsightCard(
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text('No data yet. Create a task to see statistics.'),
+                ),
+              ),
+            )
+          else ...[
+            _summaryRow(),
+            const SizedBox(height: 24),
+            _sectionTitle('Tasks by status'),
+            _statusChart(SlaService.countByStatus(_tasks, now)),
+            const SizedBox(height: 24),
+            _sectionTitle('Open tasks per member'),
+            _memberBars(),
+            const SizedBox(height: 24),
+            _sectionTitle('Upcoming deadlines'),
+            _upcoming(now),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _summaryRow() {
+    final primary = Theme.of(context).colorScheme.primary;
+    final rate = SlaService.onTimeRate(_tasks);
+    final high = SlaService.openHighPriorityCount(_tasks);
+    return SizedBox(
+      height: 100,
+      child: Row(
+        children: [
+          Expanded(
+            child: StatCard(
+              label: 'On-time rate',
+              value: '${rate.round()}%',
+              color: statusColor(SlaStatus.onTrack),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: StatCard(
+              label: 'Open high priority',
+              value: '$high',
+              color: primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Bar chart drawn with plain Containers (no chart package).
+  /// Bar height = chart height x (count / biggest count).
+  Widget _statusChart(Map<SlaStatus, int> counts) {
+    const chartHeight = 140.0;
+    final maxCount = counts.values.fold<int>(1, (m, c) => c > m ? c : m);
+    final textTheme = Theme.of(context).textTheme;
+
+    return InsightCard(
+      child: SizedBox(
+        height: chartHeight + 56,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            for (final status in SlaStatus.values)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${counts[status]}',
+                      style: textTheme.bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      width: 28,
+                      height: chartHeight * (counts[status]! / maxCount),
+                      decoration: BoxDecoration(
+                        color: statusColor(status),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      status.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _memberBars() {
+    final perMember = SlaService.openTasksPerMember(_tasks);
+    final knownIds = {for (final m in _members) m.id};
+
+    final rows = <MapEntry<String, int>>[
+      for (final m in _members) MapEntry(m.name, perMember[m.id] ?? 0),
+    ];
+
+    // Tasks whose assignee no longer exists are shown as "Unassigned".
+    var unassigned = 0;
+    perMember.forEach((id, count) {
+      if (!knownIds.contains(id)) unassigned += count;
+    });
+    if (unassigned > 0) rows.add(MapEntry('Unassigned', unassigned));
+
+    if (rows.isEmpty) {
+      return const InsightCard(child: Text('No team members yet.'));
+    }
+
+    rows.sort((a, b) => b.value.compareTo(a.value));
+    final maxOpen = rows.fold<int>(1, (m, r) => r.value > m ? r.value : m);
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return InsightCard(
+      child: Column(
+        children: [
+          for (final row in rows)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: LabeledBar(
+                label: row.key,
+                percent: row.value / maxOpen * 100,
+                valueText: '${row.value}',
+                color: primary,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _upcoming(DateTime now) {
+    final upcoming = SlaService.upcomingDeadlines(_tasks, now);
+    if (upcoming.isEmpty) {
+      return const InsightCard(child: Text('No upcoming deadlines.'));
+    }
+    final textTheme = Theme.of(context).textTheme;
+    final dateFormat = DateFormat('EEE, d MMM');
+
+    return InsightCard(
+      child: Column(
+        children: [
+          for (final task in upcoming)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          task.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(dateFormat.format(task.dueDate),
+                            style: textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  StatusPill(status: SlaService.computeStatus(task, now)),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "project_management",
-    "short_name": "project_management",
+    "name": "momentum",
+    "short_name": "momentum",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
