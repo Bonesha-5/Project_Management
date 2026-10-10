@@ -17,7 +17,6 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
-  final StorageService _storage = StorageService();
 
   List<Task> _tasks = [];
   List<Member> _members = [];
@@ -32,8 +31,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   Future<void> _loadData() async {
     try {
-      final tasks = await _storage.getTasks();
-      final members = await _storage.getMembers();
+      final tasks = await StorageService.getTasks();
+      final members = await StorageService.getMembers();
       if (!mounted) return;
       setState(() {
         _tasks = tasks;

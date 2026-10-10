@@ -21,8 +21,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   static const _dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
-  final StorageService _storage = StorageService();
-  final AuthService _auth = AuthService();
 
   List<Task> _tasks = [];
   List<Member> _members = [];
@@ -39,9 +37,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   /// Loads everything from storage, then calls setState so the screen redraws.
   Future<void> _loadData() async {
     try {
-      final tasks = await _storage.getTasks();
-      final members = await _storage.getMembers();
-      final user = await _auth.currentUser();
+      final tasks = await StorageService.getTasks();
+      final members = await StorageService.getMembers();
+      final user = await AuthService.currentUser();
       if (!mounted) return;
       setState(() {
         _tasks = tasks;
@@ -319,7 +317,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => _open(TaskDetailsScreen(task: task)),
+        onTap: () => _open(TaskDetailsScreen(taskId: task.id)),
         child: InsightCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

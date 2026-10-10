@@ -117,7 +117,7 @@ class SlaService {
   /// Returns 0 when there are no tasks (no divide-by-zero).
   static double projectProgress(List<Task> tasks) {
     if (tasks.isEmpty) return 0;
-    final total = tasks.fold<int>(
+    final total = tasks.fold<double>(
       0,
       (sum, t) => sum + (t.status == TaskStatus.done ? 100 : t.progress),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:momentum/models/task.dart';
-import 'package:momentum/services/sla_service.dart';
+import 'package:project_management/models/task.dart';
+import 'package:project_management/services/sla_service.dart';
 
 // Fixed "today" so tests never depend on the real clock.
 final DateTime now = DateTime(2026, 10, 6, 12);
