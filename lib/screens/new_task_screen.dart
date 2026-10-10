@@ -12,7 +12,6 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  final _storage = StorageService();
   List<Member> _members = [];
   bool _loading = true;
 
@@ -24,7 +23,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
   Future<void> _loadData() async {
     try {
-      final members = await _storage.getMembers();
+      final members = await StorageService.getMembers();
       if (!mounted) return;
       setState(() {
         _members = members;
@@ -48,9 +47,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         createdAt: now,
         progress: draft.status == TaskStatus.done ? 100 : 0,
       );
-      final tasks = await _storage.getTasks();
+      final tasks = await StorageService.getTasks();
       tasks.add(task);
-      await _storage.saveTasks(tasks);
+      await StorageService.saveTasks(tasks);
       if (!mounted) return;
       _snack('Task created');
       Navigator.pop(context);

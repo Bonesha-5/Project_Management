@@ -32,6 +32,9 @@ class Task {
   double _progress;
   String notes;
 
+  /// When the task was marked Done (used for the on-time rate).
+  DateTime? completedAt;
+
   Task({
     required this.id,
     required this.title,
@@ -43,6 +46,7 @@ class Task {
     TaskStatus status = TaskStatus.todo,
     double progress = 0,
     this.notes = '',
+    this.completedAt,
   })  : _status = status,
         _progress = status == TaskStatus.done
             ? 100
@@ -50,6 +54,11 @@ class Task {
 
   TaskStatus get status => _status;
   set status(TaskStatus value) {
+    if (value == TaskStatus.done && _status != TaskStatus.done) {
+      completedAt = DateTime.now();
+    } else if (value != TaskStatus.done) {
+      completedAt = null;
+    }
     _status = value;
     if (value == TaskStatus.done) _progress = 100;
   }
@@ -70,6 +79,7 @@ class Task {
     TaskStatus? status,
     double? progress,
     String? notes,
+    DateTime? completedAt,
   }) =>
       Task(
         id: id ?? this.id,
@@ -82,6 +92,7 @@ class Task {
         status: status ?? this.status,
         progress: progress ?? this.progress,
         notes: notes ?? this.notes,
+        completedAt: completedAt ?? this.completedAt,
       );
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +106,7 @@ class Task {
         'status': status.name,
         'progress': progress,
         'notes': notes,
+        'completedAt': completedAt?.toIso8601String(),
       };
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -118,6 +130,7 @@ class Task {
             ? (json['progress'] as num).toDouble()
             : double.tryParse(json['progress']?.toString() ?? '') ?? 0,
         notes: json['notes']?.toString() ?? '',
+        completedAt: DateTime.tryParse(json['completedAt']?.toString() ?? ''),
       );
 
   static String encodeList(List<Task> tasks) =>

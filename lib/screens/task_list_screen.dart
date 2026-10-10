@@ -16,7 +16,6 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  final _storage = StorageService();
   List<Task> _tasks = [];
   List<Member> _members = [];
   String _search = '';
@@ -39,8 +38,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _loadData() async {
     try {
-      final tasks = await _storage.getTasks();
-      final members = await _storage.getMembers();
+      final tasks = await StorageService.getTasks();
+      final members = await StorageService.getMembers();
       tasks.sort((a, b) => a.dueDate.compareTo(b.dueDate));
       if (!mounted) return;
       setState(() {

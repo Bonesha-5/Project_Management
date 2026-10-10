@@ -55,7 +55,7 @@ class TaskCard extends StatelessWidget {
                     Row(
                       children: [
                         if (member != null)
-                          UserAvatar(member: member!, radius: 13)
+                          UserAvatar(name: member!.name, color: Color(member!.avatarColor), size: 26)
                         else
                           CircleAvatar(
                             radius: 13,

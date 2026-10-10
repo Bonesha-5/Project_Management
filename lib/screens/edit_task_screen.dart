@@ -13,7 +13,6 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
-  final _storage = StorageService();
   Task? _task;
   List<Member> _members = [];
   bool _loading = true;
@@ -26,8 +25,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   Future<void> _loadData() async {
     try {
-      final tasks = await _storage.getTasks();
-      final members = await _storage.getMembers();
+      final tasks = await StorageService.getTasks();
+      final members = await StorageService.getMembers();
       Task? found;
       for (final t in tasks) {
         if (t.id == widget.taskId) found = t;
@@ -50,11 +49,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
 
   Future<void> _save(Task edited) async {
     try {
-      final tasks = await _storage.getTasks();
+      final tasks = await StorageService.getTasks();
       final i = tasks.indexWhere((t) => t.id == widget.taskId);
       if (i < 0) throw Exception('missing');
       tasks[i] = edited.copyWith(notes: tasks[i].notes);
-      await _storage.saveTasks(tasks);
+      await StorageService.saveTasks(tasks);
       if (!mounted) return;
       _snack('Task updated');
       Navigator.pop(context);

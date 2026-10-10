@@ -17,7 +17,6 @@ class TaskDetailsScreen extends StatefulWidget {
 }
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
-  final _storage = StorageService();
   final _notesController = TextEditingController();
   final _notesFocus = FocusNode();
 
@@ -45,8 +44,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   Future<void> _loadData() async {
     try {
-      final tasks = await _storage.getTasks();
-      final members = await _storage.getMembers();
+      final tasks = await StorageService.getTasks();
+      final members = await StorageService.getMembers();
       Task? found;
       for (final t in tasks) {
         if (t.id == widget.taskId) found = t;
@@ -78,11 +77,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   Future<bool> _persist(Task updated) async {
     try {
-      final tasks = await _storage.getTasks();
+      final tasks = await StorageService.getTasks();
       final i = tasks.indexWhere((t) => t.id == updated.id);
       if (i < 0) throw Exception('missing');
       tasks[i] = updated;
-      await _storage.saveTasks(tasks);
+      await StorageService.saveTasks(tasks);
       if (!mounted) return true;
       setState(() => _task = updated);
       return true;
@@ -145,9 +144,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     );
     if (ok != true || !mounted) return;
     try {
-      final tasks = await _storage.getTasks();
+      final tasks = await StorageService.getTasks();
       tasks.removeWhere((t) => t.id == widget.taskId);
-      await _storage.saveTasks(tasks);
+      await StorageService.saveTasks(tasks);
       if (!mounted) return;
       setState(() => _leaving = true);
       Navigator.pop(context);
