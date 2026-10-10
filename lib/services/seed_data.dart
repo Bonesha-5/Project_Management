@@ -146,7 +146,9 @@ class SeedData {
         progress: 20,
       ),
 
-      // ---------- At Risk (not done, due in 48 hours or less) ----------
+      // ---------- At Risk (due today or tomorrow) ----------
+      // SlaService counts a task as due at the END of its due day, so
+      // "today" and "tomorrow" are always within 48 hours, at any hour.
       make(
         id: 'seed-task-06',
         title: 'Implement Local Storage',
@@ -166,7 +168,7 @@ class SeedData {
         description: 'Remove the yellow and black stripes on small screens.',
         assigneeId: emilyId,
         createdAgo: const Duration(days: 3),
-        dueIn: const Duration(hours: 36),
+        dueIn: Duration.zero, // due today
         priority: Priority.high,
         status: TaskStatus.inProgress,
         progress: 50,
@@ -177,7 +179,7 @@ class SeedData {
         description: 'Review open pull requests before the merge.',
         assigneeId: michaelId,
         createdAgo: const Duration(days: 2),
-        dueIn: const Duration(hours: 40),
+        dueIn: const Duration(days: 1), // due tomorrow
         priority: Priority.medium,
         status: TaskStatus.todo,
         progress: 10,

@@ -81,7 +81,7 @@ class SlaService {
   static String message(Task task, DateTime now) {
     final status = computeStatus(task, now);
     if (status == SlaStatus.completed) return 'Task completed';
-    final work = 'only ${task.progress}% of work is done';
+    final work = 'only ${task.progress.round()}% of work is done';
     final deadline = deadlineOf(task);
     if (status == SlaStatus.overdue) {
       return 'Overdue by ${_span(now.difference(deadline))} and $work';
